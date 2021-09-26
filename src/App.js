@@ -1,23 +1,35 @@
-import logo from './logo.svg';
+import 'materialize-css/dist/css/materialize.min.css';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import './App.css';
+import Posts from './components/Posts';
 
-function App() {
+const App = () => {
+  const [posts, setPosts] = useState(null);
+  const [comments, setComments] = useState(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  useEffect(() => {
+    axios.get('https://jsonplaceholder.typicode.com/posts').then(result => {
+      setPosts(result.data);
+    }).catch(error => {
+      console.error(error);
+    })   
+  }, [])
+
+  useEffect(() => {
+    axios.get('https://jsonplaceholder.typicode.com/comments').then(result => {
+      setComments(result.data);
+    }).catch(error => {
+      console.error(error);
+    })   
+  }, [])
+
+  const renderPosts = () => posts && posts.map(post => <Posts key={post.id} post={post} comments={comments} />)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="posts">
+      {renderPosts()}
     </div>
   );
 }
