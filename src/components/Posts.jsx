@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import Post from './Post';
 
 const Posts = ({post, getComments, comments}) => {
-    console.log(post);
     const { id, title } = post;
     const [isExpanded, setIsExpanded] = useState(false);
 
