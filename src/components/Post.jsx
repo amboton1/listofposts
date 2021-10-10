@@ -1,16 +1,15 @@
 import React from 'react';
 import './post.css';
 
-const Post = ({id, title, getComments, filteredComments, isExpanded}) => {
-
+const Post = ({id, title, handleComments, comments, isExpanded}) => {
     const renderComments = () => {
         return isExpanded ? (
-            filteredComments.map(comment => (
+            comments && comments.map(comment => (
                 <div className="comment" key={comment.id}>
                     <div className="ui comments">
                         <div className="comment">
                             <a href="#!" className="avatar">
-                                <img src="/images/avatar/small/matt.jpg" alt="avatar" />
+                                <img src="/images/avatar.jpg" alt="avatar" />
                             </a>
                             <div className="content">
                                 <a href="#!" className="author">{comment.email}</a>
@@ -31,7 +30,7 @@ const Post = ({id, title, getComments, filteredComments, isExpanded}) => {
                 <div className="flexed-item">
                     {title}
                     <div className="secondary-content">
-                        <button onClick={() => getComments(id)} aria-label="Show more button" className="btn-floating btn-medium waves-effect waves-light red">
+                        <button onClick={() => handleComments(id)} aria-label="Show more button" className="btn-floating btn-medium waves-effect waves-light red">
                             {isExpanded ? <i className="material-icons">expand_less</i> : <i className="material-icons">expand_more</i>} 
                         </button>
                     </div>

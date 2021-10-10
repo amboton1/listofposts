@@ -1,17 +1,18 @@
 import React, { useState } from 'react'
 import Post from './Post';
 
-const Posts = ({post, comments}) => {
+const Posts = ({post, getComments, comments}) => {
+    console.log(post);
     const { id, title } = post;
-    const [filteredComments, setFilteredComments] = useState([]);
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const getComments = (id) => {
-        setFilteredComments(comments.filter(comment => comment.postId === id));
+    const handleComments = (id) => {
+        getComments(id);
         setIsExpanded(!isExpanded);
     }
 
-    return <Post id={id} title={title} filteredComments={filteredComments} isExpanded={isExpanded} getComments={getComments} />
+    return <Post id={id} title={title} comments={comments} isExpanded={isExpanded} handleComments={handleComments} />
 }
 
-export default Posts
+export default Posts;
+

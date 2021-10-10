@@ -3,33 +3,47 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import './App.css';
 import Posts from './components/Posts';
+import Pagination from './components/Pagination';
 
 const App = () => {
   const [posts, setPosts] = useState(null);
   const [comments, setComments] = useState(null);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 10;
 
   useEffect(() => {
-    axios.get('https://jsonplaceholder.typicode.com/posts').then(result => {
+    const fetchPosts = async () => {
+      const result = await axios.get('https://jsonplaceholder.typicode.com/posts');
       setPosts(result.data);
-    }).catch(error => {
-      console.error(error);
-    })   
+    }
+
+    fetchPosts();
   }, [])
 
-  useEffect(() => {
-    axios.get('https://jsonplaceholder.typicode.com/comments').then(result => {
+  const getComments = (id) => {
+    const fetchComments = async () => {
+      const result = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${id}`);
       setComments(result.data);
-    }).catch(error => {
-      console.error(error);
-    })   
-  }, [])
+    }
 
-  const renderPosts = () => posts && posts.map(post => <Posts key={post.id} post={post} comments={comments} />)
+    fetchComments();
+  }
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts?.slice(indexOfFirstPost, indexOfLastPost);
+
+  const changePage = (e, pageNumber) => {
+    e.preventDefault();
+    setCurrentPage(pageNumber);
+  }
+
+  const renderPosts = () => currentPosts.map(post => <Posts key={post.id} post={post} comments={comments} getComments={getComments} />)
 
   return (
-    <div className="posts">
-      {renderPosts()}
+    <div className="posts container">
+      {currentPosts && renderPosts()}
+      <Pagination postsPerPage={postsPerPage} totalPosts={posts?.length} changePage={changePage} pageNumber={currentPage} />
     </div>
   );
 }
